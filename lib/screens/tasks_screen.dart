@@ -2,9 +2,26 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:todoey/screens/add_task_screen.dart';
 
-class TasksScreen extends StatelessWidget {
-  const TasksScreen({super.key});
+import '../models/task.dart';
+import '../widgets/task_list.dart';
+
+class TasksScreen extends StatefulWidget {
+
+
+  @override
+  State<TasksScreen> createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen> {
+
+  TextEditingController addTaskText = TextEditingController();
+
+  List<Task> tasks  = [
+    Task(name: 'Buy milk'),
+    Task(name: 'Leave family')
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +31,23 @@ class TasksScreen extends StatelessWidget {
         backgroundColor: Colors.lightBlueAccent,
         child: Icon(Icons.add, color: Colors.white,),
         onPressed: (){
+          showModalBottomSheet(
+            isScrollControlled: true,
+           context: context,
+           builder: (context) => SingleChildScrollView(
+             child: Container(
+               padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+               child: AddTaskScreen(
+                 onPress: () {
+                   print(addTaskText.toString());
+                   setState(() {
+                     tasks.add(Task(name: addTaskText.text));
+                     Navigator.pop(context);
+                   });
+                 },
+                 controller: addTaskText,
+               )))
+          );
 
         },
       ),
@@ -40,7 +74,7 @@ class TasksScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '12 Tasks',
+                  '${tasks.length} Tasks',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -51,10 +85,12 @@ class TasksScreen extends StatelessWidget {
           ),
           Expanded(
             child: Container(
+              padding: EdgeInsets.only(left: 20, right: 20),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
               ),
+              child: TaskList(tasks)
             ),
           )
         ],
@@ -62,3 +98,6 @@ class TasksScreen extends StatelessWidget {
     );
   }
 }
+
+
+
