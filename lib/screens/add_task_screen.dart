@@ -2,13 +2,16 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todoey/models/task.dart';
+
+import '../main.dart';
 
 class AddTaskScreen extends StatelessWidget {
 
-  final Function()? onPress;
-  final TextEditingController controller;
-
-  AddTaskScreen({required this.onPress, required this.controller});
+  TextEditingController controller = TextEditingController();
+  
+  late final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +34,16 @@ class AddTaskScreen extends StatelessWidget {
               ),
             ),
             TextField(
+              controller: controller,
               autofocus: true,
               textAlign: TextAlign.center,
-              controller: controller,
             ),
             SizedBox(height: 20,),
             TextButton(
-              onPressed: onPress,
+              onPressed: (){
+                context.read<Data>().addTasks(Task(name: controller.text));
+                Navigator.of(context).pop();
+              } ,
               style: TextButton.styleFrom(
                 backgroundColor: Colors.lightBlueAccent,
                 shape: RoundedRectangleBorder(

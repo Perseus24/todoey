@@ -3,7 +3,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todoey/screens/add_task_screen.dart';
+import 'package:provider/provider.dart';
 
+import '../main.dart';
 import '../models/task.dart';
 import '../widgets/task_list.dart';
 
@@ -16,12 +18,6 @@ class TasksScreen extends StatefulWidget {
 
 class _TasksScreenState extends State<TasksScreen> {
 
-  TextEditingController addTaskText = TextEditingController();
-
-  List<Task> tasks  = [
-    Task(name: 'Buy milk'),
-    Task(name: 'Leave family')
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -37,16 +33,7 @@ class _TasksScreenState extends State<TasksScreen> {
            builder: (context) => SingleChildScrollView(
              child: Container(
                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-               child: AddTaskScreen(
-                 onPress: () {
-                   print(addTaskText.toString());
-                   setState(() {
-                     tasks.add(Task(name: addTaskText.text));
-                     Navigator.pop(context);
-                   });
-                 },
-                 controller: addTaskText,
-               )))
+               child: AddTaskScreen()))
           );
 
         },
@@ -74,7 +61,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   ),
                 ),
                 Text(
-                  '${tasks.length} Tasks',
+                  '${context.watch<Data>().tasks.length} Tasks',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -90,7 +77,7 @@ class _TasksScreenState extends State<TasksScreen> {
                 color: Colors.white,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
               ),
-              child: TaskList(tasks)
+              child: TaskList()
             ),
           )
         ],
