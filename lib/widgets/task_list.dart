@@ -1,32 +1,31 @@
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:todoey/widgets/task_tile.dart';
 import 'package:todoey/models/task.dart';
 
-class TaskList extends StatefulWidget {
+import '../main.dart';
 
-  @override
-  State<TaskList> createState() => _TaskListState();
-}
+class TaskList extends StatelessWidget {
 
-class _TaskListState extends State<TaskList> {
-
-  List<Task> tasks  = [
-    Task(name: 'Buy milk'),
-    Task(name: 'Leave family')
-  ];
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: tasks.length,
-      itemBuilder: (context, position){
-        return TaskTile(title: tasks[position].name,
-                        isChecked: tasks[position].isDone,
-                        onPress: (value){
-                          setState(() {
-                            tasks[position].toggleDone();
-                          });
-                        });
+    return Consumer<Data>(
+      builder: (context, taskData, child){
+        return ListView.builder(
+          itemCount: taskData.tasks.length,
+          itemBuilder: (context, position){
+            return TaskTile(title: taskData.tasks[position].name,
+                isChecked: taskData.tasks[position].isDone,
+                onPress: (value){
+                  taskData.updateTasks(taskData.tasks[position]);
+                },
+                deleteTile: (){
+                  taskData.deleteTask(taskData.tasks[position]);
 
+                },
+            );
+          },
+        );
       },
     );
   }
